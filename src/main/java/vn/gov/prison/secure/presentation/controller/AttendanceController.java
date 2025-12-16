@@ -1,6 +1,7 @@
 package vn.gov.prison.secure.presentation.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import java.util.UUID;
 @RequestMapping("/api/v1/attendance")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
+@SecurityRequirement(name = "Bearer Authentication")
 @Tag(name = "Attendance - Điểm danh", description = "API điểm danh hàng ngày cho tù nhân: Check-in/Check-out với máy rung")
 public class AttendanceController {
 

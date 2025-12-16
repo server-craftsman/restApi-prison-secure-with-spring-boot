@@ -3,7 +3,7 @@ package vn.gov.prison.secure.infrastructure.persistence.mapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import vn.gov.prison.secure.domain.model.prisoner.*;
-import vn.gov.prison.secure.infrastructure.persistence.entity.PrisonerJpaEntity;
+import vn.gov.prison.secure.infrastructure.persistence.jpa.entity.PrisonerJpaEntity;
 
 import java.util.List;
 

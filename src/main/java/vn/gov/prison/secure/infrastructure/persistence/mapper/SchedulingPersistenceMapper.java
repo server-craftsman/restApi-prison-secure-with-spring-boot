@@ -3,8 +3,8 @@ package vn.gov.prison.secure.infrastructure.persistence.mapper;
 import org.springframework.stereotype.Component;
 import vn.gov.prison.secure.domain.model.prisoner.PrisonerId;
 import vn.gov.prison.secure.domain.model.scheduling.*;
-import vn.gov.prison.secure.infrastructure.persistence.entity.CourtDateJpaEntity;
-import vn.gov.prison.secure.infrastructure.persistence.entity.ScheduleJpaEntity;
+import vn.gov.prison.secure.infrastructure.persistence.jpa.entity.CourtDateJpaEntity;
+import vn.gov.prison.secure.infrastructure.persistence.jpa.entity.ScheduleJpaEntity;
 
 @Component
 public class SchedulingPersistenceMapper {

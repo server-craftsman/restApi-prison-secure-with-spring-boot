@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import vn.gov.prison.secure.domain.model.booking.Booking;
 import vn.gov.prison.secure.domain.model.booking.BookingId;
 import vn.gov.prison.secure.domain.model.prisoner.PrisonerId;
-import vn.gov.prison.secure.infrastructure.persistence.entity.BookingJpaEntity;
+import vn.gov.prison.secure.infrastructure.persistence.jpa.entity.BookingJpaEntity;
 
 @Component
 public class BookingPersistenceMapper {

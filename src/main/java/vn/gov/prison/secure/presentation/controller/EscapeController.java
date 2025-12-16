@@ -1,6 +1,7 @@
 package vn.gov.prison.secure.presentation.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import java.util.UUID;
 @RequestMapping("/api/v1/escapes")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
+@SecurityRequirement(name = "Bearer Authentication")
 @Tag(name = "Escape Requests - Yêu cầu Trốn tù", description = "API quản lý yêu cầu trốn tù: Tạo yêu cầu, phê duyệt 2 cấp (Quản giáo → Quản đốc)")
 public class EscapeController {
 

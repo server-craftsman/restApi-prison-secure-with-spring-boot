@@ -2,8 +2,8 @@ package vn.gov.prison.secure.infrastructure.persistence.mapper;
 
 import org.springframework.stereotype.Component;
 import vn.gov.prison.secure.domain.model.workflow.*;
-import vn.gov.prison.secure.infrastructure.persistence.entity.WorkflowInstanceJpaEntity;
-import vn.gov.prison.secure.infrastructure.persistence.entity.WorkflowJpaEntity;
+import vn.gov.prison.secure.infrastructure.persistence.jpa.entity.WorkflowInstanceJpaEntity;
+import vn.gov.prison.secure.infrastructure.persistence.jpa.entity.WorkflowJpaEntity;
 
 @Component
 public class WorkflowPersistenceMapper {

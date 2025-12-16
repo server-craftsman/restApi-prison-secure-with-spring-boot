@@ -30,7 +30,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  * - Dependency Inversion: Depends on abstractions
  */
 @SpringBootApplication
-@EnableJpaRepositories(basePackages = "vn.gov.prison.secure.infrastructure.persistence.repository")
+@EnableJpaRepositories(basePackages = "vn.gov.prison.secure.infrastructure.persistence.jpa.repository")
 public class PrisonSecureApplication {
 
 	public static void main(String[] args) {

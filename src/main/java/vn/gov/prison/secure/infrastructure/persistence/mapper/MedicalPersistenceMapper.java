@@ -3,9 +3,9 @@ package vn.gov.prison.secure.infrastructure.persistence.mapper;
 import org.springframework.stereotype.Component;
 import vn.gov.prison.secure.domain.model.medical.*;
 import vn.gov.prison.secure.domain.model.prisoner.PrisonerId;
-import vn.gov.prison.secure.infrastructure.persistence.entity.HealthCheckupJpaEntity;
-import vn.gov.prison.secure.infrastructure.persistence.entity.MedicalRecordJpaEntity;
-import vn.gov.prison.secure.infrastructure.persistence.entity.PrescriptionJpaEntity;
+import vn.gov.prison.secure.infrastructure.persistence.jpa.entity.HealthCheckupJpaEntity;
+import vn.gov.prison.secure.infrastructure.persistence.jpa.entity.MedicalRecordJpaEntity;
+import vn.gov.prison.secure.infrastructure.persistence.jpa.entity.PrescriptionJpaEntity;
 
 import java.util.UUID;
 
