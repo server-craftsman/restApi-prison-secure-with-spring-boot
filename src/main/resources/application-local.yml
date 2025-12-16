@@ -1,0 +1,29 @@
+# Local Development Profile (without Docker)
+# Use this when running app locally and PostgreSQL separately
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/prison_secure # localhost instead of 'postgres'
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: postgres
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+# Logging
+logging:
+  level:
+    vn.gov.prison.secure: DEBUG
+    org.hibernate.SQL: DEBUG
