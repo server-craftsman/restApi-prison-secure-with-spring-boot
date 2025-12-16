@@ -32,9 +32,9 @@ src/main/java/vn/gov/prison/secure/
 
 ## Documentation
 
-- **[API_DOCUMENTATION.md](API_DOCUMENTATION.md)** - API Documentation
-- **Swagger UI** - Interactive API documentation
-- **Database Schema** - 9 Flyway migrations
+- **[API_DOCUMENTATION.md](API_DOCUMENTATION.md)** 
+- **Swagger UI**
+- **Database Schema**
 
 ## License
 © 2025 Copyright by Đan Huy | fb/dan.huy.servercraftsman
