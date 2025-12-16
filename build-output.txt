@@ -1,0 +1,47 @@
+﻿[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------< vn.gov.prison.prisonsecure:prison-secure >--------------
+[INFO] Building prison-secure 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.3.2:clean (default-clean) @ prison-secure ---
+[INFO] Deleting D:\my-project\prison-secure\target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ prison-secure ---
+[INFO] Copying 3 resources from src\main\resources to target\classes
+[INFO] Copying 9 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ prison-secure ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 129 source files with javac [debug parameters release 17] to target\classes
+[INFO] Some messages have been simplified; recompile with -Xdiags:verbose to get full output
+[INFO] -------------------------------------------------------------
+[WARNING] COMPILATION WARNING : 
+[INFO] -------------------------------------------------------------
+[WARNING] /D:/my-project/prison-secure/src/main/java/vn/gov/prison/secure/infrastructure/persistence/entity/PrescriptionJpaEntity.java:[17,1] Generating equals/hashCode implementation but without a call to superclass, even though this class does not extend java.lang.Object. If this is intentional, add '@EqualsAndHashCode(callSuper=false)' to your type.
+[WARNING] /D:/my-project/prison-secure/src/main/java/vn/gov/prison/secure/infrastructure/persistence/entity/HealthCheckupJpaEntity.java:[19,1] Generating equals/hashCode implementation but without a call to superclass, even though this class does not extend java.lang.Object. If this is intentional, add '@EqualsAndHashCode(callSuper=false)' to your type.
+[INFO] 2 warnings 
+[INFO] -------------------------------------------------------------
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /D:/my-project/prison-secure/src/main/java/vn/gov/prison/secure/application/usecase/medical/DeleteMedicalRecordUseCase.java:[23,40] incompatible types: vn.gov.prison.secure.domain.model.medical.MedicalRecord cannot be converted to vn.gov.prison.secure.domain.model.medical.MedicalRecordId
+[INFO] 1 error
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  13.079 s
+[INFO] Finished at: 2025-12-16T12:34:40+07:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.13.0:compile (default-compile) on project prison-secure: Compilation failure
+[ERROR] /D:/my-project/prison-secure/src/main/java/vn/gov/prison/secure/application/usecase/medical/DeleteMedicalRecordUseCase.java:[23,40] incompatible types: vn.gov.prison.secure.domain.model.medical.MedicalRecord cannot be converted to vn.gov.prison.secure.domain.model.medical.MedicalRecordId
+[ERROR] 
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
