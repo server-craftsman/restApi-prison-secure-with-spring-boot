@@ -1,7 +1,17 @@
+-- ============================================
 -- V1: Create Prisoner Schema
--- Migration for prisoner management system
--- Following PostgreSQL best practices
+-- Tạo schema quản lý tù nhân
+-- ============================================
 
+-- ============================================
+-- BẢNG: prisoners
+-- MỤC ĐÍCH: Lưu trữ thông tin cơ bản và toàn diện của tù nhân
+-- MÔ TẢ: Bảng chính quản lý hồ sơ tù nhân bao gồm:
+--        - Thông tin nhân khẩu học (họ tên, ngày sinh, giới tính, quốc tịch)
+--        - Đặc điểm vật lý (chiều cao, cân nặng, màu mắt, sáo, hình xam)
+--        - Trạng thái giam giữ (đang giam, tạm thả, đã thả, trốn)
+--        - Vị trí hiện tại (trại giam, khu, phòng giam)
+-- ============================================
 CREATE TABLE IF NOT EXISTS prisoners (
     id VARCHAR(36) PRIMARY KEY,
     prisoner_number VARCHAR(50) NOT NULL UNIQUE,
@@ -59,7 +69,12 @@ CREATE INDEX idx_facility ON prisoners(assigned_facility);
 CREATE INDEX idx_admission_date ON prisoners(admission_date);
 CREATE INDEX idx_name_search ON prisoners(first_name, last_name);
 
--- Create biometric data table
+-- ============================================
+-- BẢNG: biometric_data
+-- MỤC ĐÍCH: ưu trữ dữ liệu sinh trắc học để nhận diện tù nhân
+-- MÔ TẢ: Chứa các mẫu sinh trắc học (vân tay, mống mắt, khuôn mặt, DNA)
+--        tuân thủ chuẩn FBI/NIST để xác thực danh tính tù nhân
+-- ============================================
 CREATE TABLE IF NOT EXISTS biometric_data (
     id VARCHAR(36) PRIMARY KEY,
     prisoner_id VARCHAR(36) NOT NULL,
@@ -91,9 +106,12 @@ CREATE INDEX idx_biometric_prisoner ON biometric_data(prisoner_id);
 CREATE INDEX idx_biometric_type ON biometric_data(biometric_type);
 CREATE INDEX idx_biometric_captured ON biometric_data(captured_at);
 
+-- ============================================
+-- GHI CHÚ (Comments) - Mô tả bảng và cột
+-- ============================================
 -- Add comments for documentation
-COMMENT ON TABLE prisoners IS 'Main prisoner records with demographic and status information';
-COMMENT ON TABLE biometric_data IS 'Biometric templates captured for prisoner identification';
-COMMENT ON COLUMN prisoners.prisoner_number IS 'Unique system-generated prisoner identification number';
-COMMENT ON COLUMN prisoners.status IS 'Current status of the prisoner in the system';
-COMMENT ON COLUMN biometric_data.template_data IS 'Binary biometric template following FBI/NIST standards';
+COMMENT ON TABLE prisoners IS 'Bảng hồ sơ tù nhân chính với thông tin nhân khẩu và trạng thái';
+COMMENT ON TABLE biometric_data IS 'Dữ liệu sinh trắc học để nhận diện tù nhân';
+COMMENT ON COLUMN prisoners.prisoner_number IS 'Mã số tù nhân duy nhất do hệ thống tạo';
+COMMENT ON COLUMN prisoners.status IS 'Trạng thái hiện tại của tù nhân trong hệ thống';
+COMMENT ON COLUMN biometric_data.template_data IS 'Dữ liệu sinh trắc học nhị phân tuân theo tiêu chuẩn FBI/NIST';

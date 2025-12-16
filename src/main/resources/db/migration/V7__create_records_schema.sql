@@ -1,7 +1,16 @@
--- Records Management Module Schema
--- Version: V7
--- Description: Creates tables for document management and access control
+-- ============================================
+-- V7: Records Management Module Schema
+-- Tạo schema quản lý tài liệu và kiểm soát truy cập
+-- ============================================
 
+-- ============================================
+-- BẢNG: document_categories
+-- MỤC ĐÍCH: Lưu trữ các danh mục tài liệu theo phân cấp
+-- MÔ TẢ: Tổ chức tài liệu bao gồm:
+--        - Tên danh mục, mô tả chi tiết
+--        - Danh mục cha (cho cấu trúc cây)
+--        - Đường dẫn danh mục, trạng thái hoạt động
+-- ============================================
 -- Document Categories Table
 CREATE TABLE document_categories (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -20,6 +29,16 @@ CREATE TABLE document_categories (
     CONSTRAINT uq_category_name UNIQUE (category_name, parent_category_id)
 );
 
+-- ============================================
+-- BẢNG: documents
+-- MỤC ĐÍCH: Lưu trữ metadata của các tài liệu
+-- MÔ TẢ: Quản lý tài liệu bao gồm:
+--        - Loại tài liệu (pháp lý, y tế, chứng minh thư, lệnh tòa án, chuyển lao động, tài sản, khiếu nại, sự cố, ảnh, khác)
+--        - Tên, mô tả, đường dẫn file, kích thước, loại MIME
+--        - Checksum (mã kiểm tra), phiên bản
+--        - Người tải lên, thời gian tải lên, ngày hết hạn
+--        - Mật độ, lưu trữ, tag, metadata (JSON)
+-- ============================================
 -- Documents Table
 CREATE TABLE documents (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -55,6 +74,14 @@ CREATE TABLE documents (
     CONSTRAINT chk_document_type CHECK (document_type IN ('LEGAL', 'MEDICAL', 'IDENTIFICATION', 'COURT_ORDER', 'TRANSFER', 'PROPERTY', 'COMPLAINT', 'INCIDENT', 'PHOTO', 'OTHER'))
 );
 
+-- ============================================
+-- BẢNG: document_access_log
+-- MỤC ĐÍCH: Ghi nhật ký tất cả hoạt động truy cập tài liệu (audit trail)
+-- MÔ TẢ: Theo dõi truy cập tài liệu bao gồm:
+--        - Người truy cập, loại hoạt động (xem, tải, in, sửa, xóa, chia sẻ)
+--        - Thời gian truy cập, địa chỉ IP, user agent
+--        - Trạng thái thành công/thất bại, lý do thất bại
+-- ============================================
 -- Document Access Log Table
 CREATE TABLE document_access_log (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -71,6 +98,14 @@ CREATE TABLE document_access_log (
     CONSTRAINT chk_access_type CHECK (access_type IN ('VIEW', 'DOWNLOAD', 'PRINT', 'EDIT', 'DELETE', 'SHARE'))
 );
 
+-- ============================================
+-- BẢNG: document_permissions
+-- MỤC ĐÍCH: Quản lý quyền truy cập tài liệu cho người dùng/vai trò
+-- MÔ TẢ: Kiểm soát quyền hạn bao gồm:
+--        - Người dùng hoặc vai trò được cấp quyền
+--        - Loại quyền (đọc, ghi, xóa, chia sẻ, quản trị)
+--        - Người cấp quyền, thời gian cấp, ngày hết hạn
+-- ============================================
 -- Document Permissions Table
 CREATE TABLE document_permissions (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -89,6 +124,9 @@ CREATE TABLE document_permissions (
     CONSTRAINT uq_document_permission UNIQUE (document_id, user_or_role, permission_type)
 );
 
+-- ============================================
+-- CHỈ MỤC (Indexes) - Cải thiện hiệu suất truy vấn
+-- ============================================
 -- Indexes
 CREATE INDEX idx_document_categories_parent ON document_categories(parent_category_id);
 CREATE INDEX idx_document_categories_active ON document_categories(is_active);

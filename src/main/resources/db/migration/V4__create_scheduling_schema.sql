@@ -1,7 +1,18 @@
--- Scheduling Module Schema
--- Version: V4
--- Description: Creates tables for schedules, court dates, and appointments
+-- ============================================
+-- V4: Scheduling Module Schema
+-- Tạo schema quản lý lịch trình, ngày xét xử và cuộc hẹn
+-- ============================================
 
+-- ============================================
+-- BẢNG: schedules
+-- MỤC ĐÍCH: Quản lý trung tâm các lịch trình khác nhau của tù nhân
+-- MÔ TẢ: Bảng quản lý lịch trình bao gồm:
+--        - Loại lịch (tòa án, y tế, gặp khách, hoạt động, chuyển lao động, phóng thích, khác)
+--        - Tiêu đề, mô tả chi tiết lịch trình
+--        - Ngày/giờ bắt đầu - kết thúc, thời lượng, địa điểm
+--        - Trạng thái (lên lịch, xác nhận, hoàn thành, hủy, sắp xếp lại, vắng mặt)
+--        - Ưu tiên (thấp, bình thường, cao, khẩn cấp)
+-- ============================================
 -- Schedules Table (central scheduling)
 CREATE TABLE schedules (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -30,6 +41,17 @@ CREATE TABLE schedules (
     CONSTRAINT chk_schedule_dates CHECK (end_date IS NULL OR end_date >= scheduled_date)
 );
 
+-- ============================================
+-- BẢNG: court_dates
+-- MỤC ĐÍCH: Quản lý thông tin lịch tòa và phiên tòa xét xử
+-- MÔ TẢ: Lưu trữ chi tiết phiên tòa bao gồm:
+--        - Tên tòa án, địa chỉ, số vụ án
+--        - Loại phiên tòa (truy tố ban đầu, xét xử sơ bộ, xét xử chính thức, tuyên án, kháng cáo, tại ngoại, khác)
+--        - Tên thẩm phán, luật sư, thông tin liên hệ
+--        - Tội danh, kết quả xét xử, phán quyết
+--        - Phán quyết (có tội, vô tội, chưa xác định, bị bác, thỏa thuận nhận tội)
+--        - Lịch xét xử tiếp theo, sắp xếp chuyên chở
+-- ============================================
 -- Court Dates Table
 CREATE TABLE court_dates (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -61,6 +83,16 @@ CREATE TABLE court_dates (
     CONSTRAINT chk_verdict CHECK (verdict IN ('GUILTY', 'NOT_GUILTY', 'PENDING', 'DISMISSED', 'PLEA_BARGAIN'))
 );
 
+-- ============================================
+-- BẢNG: appointments
+-- MỤC ĐÍCH: Quản lý các cuộc hẹn với tù nhân (y tế, pháp lý, gặp khách, tư vấn...)
+-- MÔ TẢ: Lưu trữ thông tin cuộc hẹn bao gồm:
+--        - Loại cuộc hẹn (y tế, pháp lý, gặp gia đình, gặp lãnh đạo, tư vấn, giáo dục, khác)
+--        - Mục đích cuộc hẹn, mô tả chi tiết
+--        - Trạng thái (yêu cầu, phê duyệt, xác nhận, hoàn thành, hủy, từ chối, vắng mặt)
+--        - Người yêu cầu, người phê duyệt, người xác nhận
+--        - Trạng thái tham dự (có mặt, vắng mặt, trễ, rời sớm)
+-- ============================================
 -- Appointments Table
 CREATE TABLE appointments (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -93,6 +125,9 @@ CREATE TABLE appointments (
     CONSTRAINT chk_attendance_status CHECK (attendance_status IN ('PRESENT', 'ABSENT', 'LATE', 'EARLY_DEPARTURE'))
 );
 
+-- ============================================
+-- CHỈ MỤC (Indexes) - Cải thiện hiệu suất truy vấn
+-- ============================================
 -- Indexes for performance
 CREATE INDEX idx_schedules_prisoner_id ON schedules(prisoner_id);
 CREATE INDEX idx_schedules_date ON schedules(scheduled_date DESC);

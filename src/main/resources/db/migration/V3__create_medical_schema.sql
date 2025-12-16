@@ -1,8 +1,17 @@
--- Medical Management Module Schema
--- Version: V3
--- Description: Creates tables for medical records, prescriptions, and health checkups
+-- ============================================
+-- V3: Medical Management Module Schema
+-- Tạo schema quản lý hồ sơ y tế của tù nhân
+-- ============================================
 
--- Medical Records Table
+-- ============================================
+-- BẢNG: medical_records
+-- MỤC ĐÍCH: Lưu trữ hồ sơ khám bệnh và điều trị của tù nhân
+-- MÔ TẢ: Quản lý thông tin y tế bao gồm:
+--        - Loại khám (tổng quát, cấp cứu, khám định kỳ, chuyên khoa, sức khỏe tâm thần, nha khoa)
+--        - Chẩn đoán, điều trị, ghi chú từ nhân viên y tế
+--        - Mức độ nghiêm trọng (thấp, trung bình, cao, nguy kịch)
+--        - Theo dõi theo dõi tiếp theo nếu cần
+-- ============================================
 CREATE TABLE medical_records (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     prisoner_id VARCHAR(36) NOT NULL,
@@ -26,6 +35,16 @@ CREATE TABLE medical_records (
     CONSTRAINT chk_severity CHECK (severity IN ('LOW', 'MEDIUM', 'HIGH', 'CRITICAL'))
 );
 
+-- ============================================
+-- BẢNG: prescriptions
+-- MỤC ĐÍCH: Lưu trữ đơn thuốc và thông tin điều trị bằng thuốc
+-- MÔ TẢ: Quản lý các đơn thuốc bao gồm:
+--        - Tên thuốc, liều lượng, tần suất sử dụng
+--        - Đường dùng (qua đường miệng, tiêm, bôi, tiêm tĩnh mạch)
+--        - Ngày bắt đầu - kết thúc điều trị
+--        - Trạng thái đơn (hoạt động, hoàn thành, dừng, tạm dừng)
+--        - Lý do dừng thuốc nếu có
+-- ============================================
 -- Prescriptions Table
 CREATE TABLE prescriptions (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -54,6 +73,16 @@ CREATE TABLE prescriptions (
     CONSTRAINT chk_prescription_dates CHECK (end_date IS NULL OR end_date >= start_date)
 );
 
+-- ============================================
+-- BẢNG: health_checkups
+-- MỤC ĐÍCH: Lưu trữ kết quả khám sức khỏe định kỳ
+-- MÔ TẢ: Quản lý thông tin khám sức khỏe bao gồm:
+--        - Loại khám (nhập viện, định kỳ, theo dõi, cấp cứu, trước phóng thích, hàng năm)
+--        - Các chỉ số sức khỏe: huyết áp, nhịp tim, thân nhiệt, cân nặng, chiều cao, BMI
+--        - Đường huyết, độ bão hòa oxy, tần suất thở, tình trạng tổng quát
+--        - Tình trạng sức khỏe (xuất sắc, tốt, vừa phải, kém, nguy kịch)
+--        - Lịch khám tiếp theo
+-- ============================================
 -- Health Checkups Table
 CREATE TABLE health_checkups (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -92,6 +121,9 @@ CREATE TABLE health_checkups (
     )
 );
 
+-- ============================================
+-- CHỈ MỤC (Indexes) - Cải thiện hiệu suất truy vấn
+-- ============================================
 -- Indexes for performance
 CREATE INDEX idx_medical_records_prisoner_id ON medical_records(prisoner_id);
 CREATE INDEX idx_medical_records_record_date ON medical_records(record_date DESC);

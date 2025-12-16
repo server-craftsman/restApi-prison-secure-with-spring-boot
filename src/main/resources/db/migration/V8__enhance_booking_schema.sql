@@ -1,7 +1,18 @@
--- Booking Module Enhancements
--- Version: V8
--- Description: Adds tables for booking charges, property items, and cell assignments
+-- ============================================
+-- V8: Booking Module Enhancements
+-- Tăng cường schema quản lý nhập viện
+-- ============================================
 
+-- ============================================
+-- BẢNG: booking_charges
+-- MỤC ĐÍCH: Lưu trữ tội danh liên quan đến mỗi lần nhập viện
+-- MÔ TẢ: Quản lý tội danh bao gồm:
+--        - Loại tội danh (trọng tội, tội nhẹ, vi phạm hành chính, vi phạm, khác)
+--        - Mô tả tội danh, mã luật pháp, cấp độ tội danh
+--        - Số tiền tại ngoại, loại bảo lãnh (tiền mặt, bảo lãnh bên thứ ba, tài sản, tự nhận, không được tại ngoại)
+--        - Số vụ án, trạng thái tội danh (chờ xử lý, đã nộp, bị bác, bị kết tội, được tuyên trắng án, thỏa thuận nhận tội)
+--        - Ngày nộp, xét xử, phán quyết, thời gian hình phạt
+-- ============================================
 -- Booking Charges Table
 CREATE TABLE booking_charges (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -32,6 +43,17 @@ CREATE TABLE booking_charges (
     CONSTRAINT chk_charge_status CHECK (charge_status IN ('PENDING', 'FILED', 'DISMISSED', 'CONVICTED', 'ACQUITTED', 'PLEA_BARGAIN'))
 );
 
+-- ============================================
+-- BẢNG: property_items
+-- MỤC ĐÍCH: Lưu trữ danh sách tài sản cá nhân của tù nhân tại thời điểm nhập viện
+-- MÔ TẢ: Quản lý tài sản bao gồm:
+--        - Danh mục tài sản (quần áo, trang sức, thiết bị điện tử, tài liệu, tiền mặt, thuốc men, vật dụng cá nhân, khác)
+--        - Mô tả, số lượng, giá trị ước tính
+--        - Tình trạng (xuất sắc, tốt, vừa phải, kém, bị hỏng)
+--        - Vị trí lưu trữ, là contraband hay không
+--        - Xử lý (lưu trữ, hoàn trả, bị hủy, chuyển giao, bằng chứng, quyên tặng)
+--        - Người nhận, thời gian nhận, người nhận lại
+-- ============================================
 -- Property Items Table
 CREATE TABLE property_items (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -62,6 +84,15 @@ CREATE TABLE property_items (
     CONSTRAINT chk_item_disposition CHECK (disposition IN ('STORED', 'RETURNED', 'DESTROYED', 'TRANSFERRED', 'EVIDENCE', 'DONATED'))
 );
 
+-- ============================================
+-- BẢNG: cell_assignments
+-- MỤC ĐÍCH: Lưu trữ thông tin phân phòng giam cho tù nhân
+-- MÔ TẢ: Quản lý phân phòng bao gồm:
+--        - Số phòng, khu lao động, loại phòng (thông thường, cách ly, y tế, bảo vệ an toàn, kỷ luật, tiếp nhận)
+--        - Số giường, ngày phân phòng, ngày thả
+--        - Trạng thái phân phòng (hoạt động, hoàn thành, chuyển, phóng thích)
+--        - Lý do phân phòng, người phân phòng, người xác nhận thả
+-- ============================================
 -- Cell Assignments Table
 CREATE TABLE cell_assignments (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -89,6 +120,9 @@ CREATE TABLE cell_assignments (
     CONSTRAINT chk_assignment_dates CHECK (release_date IS NULL OR release_date >= assignment_date)
 );
 
+-- ============================================
+-- CHỈ MỤC (Indexes) - Cải thiện hiệu suất truy vấn
+-- ============================================
 -- Indexes
 CREATE INDEX idx_booking_charges_booking ON booking_charges(booking_id);
 CREATE INDEX idx_booking_charges_status ON booking_charges(charge_status);

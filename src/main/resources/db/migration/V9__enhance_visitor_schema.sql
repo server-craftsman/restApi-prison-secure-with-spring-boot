@@ -1,7 +1,16 @@
--- Visitor Module Enhancements
--- Version: V9
--- Description: Adds tables for visit requests, visit logs, and visitation rules
+-- ============================================
+-- V9: Visitor Module Enhancements
+-- Tăng cường schema quản lý khách thăm
+-- ============================================
 
+-- ============================================
+-- BẢNG: visitors
+-- MỤC ĐÍCH: Lưu trữ thông tin của những người muốn thăm tù nhân
+-- MÔ TẢ: Quản lý khách thăm bao gồm:
+--        - Tên, ngày sinh, loại giấy tờ tùy thân (chứng minh thư, hộ chiếu, bằng lái xe, v.v.)
+--        - Số giấy tờ tùy thân, số điện thoại, email, địa chỉ
+--        - Ảnh khách thăm, trạng thái bị cấm, ghi chú
+-- ============================================
 -- Visitors Table
 CREATE TABLE visitors (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -28,6 +37,14 @@ CREATE TABLE visitors (
 CREATE INDEX idx_visitors_name ON visitors(last_name, first_name);
 CREATE INDEX idx_visitors_identification ON visitors(identification_number);
 
+-- ============================================
+-- BẢNG: visit_requests
+-- MỤC ĐÍCH: Lưu trữ yêu cầu thăm viếng của khách
+-- MÔ TẢ: Quản lý yêu cầu thăm bao gồm:
+--        - Ngày/giờ mong muốn thăm, thời lượng, loại thăm (gia đình, pháp lý, chính thức, xã hội, tôn giáo, y tế, khác)
+--        - Mục đích thăm, trạng thái (chờ xử lý, phê duyệt, từ chối, hủy, hết hạn)
+--        - Người yêu cầu, người xem xét, ghi chú phê duyệt, lý do từ chối
+-- ============================================
 -- Visit Requests Table
 CREATE TABLE visit_requests (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -54,6 +71,17 @@ CREATE TABLE visit_requests (
     CONSTRAINT chk_request_status CHECK (request_status IN ('PENDING', 'APPROVED', 'REJECTED', 'CANCELLED', 'EXPIRED'))
 );
 
+-- ============================================
+-- BẢNG: visit_logs
+-- MỤC ĐÍCH: Ghi nhật ký chi tiết mỗi lần thăm viếng
+-- MÔ TẢ: Quản lý nhật ký thăm bao gồm:
+--        - Thời gian nhận khách, kết thúc, thời gian thực tế
+--        - Địa điểm thăm, nhân viên giám sát
+--        - Ghi chú, có sự cố không, mô tả sự cố
+--        - Hành vi khách thăm (xuất sắc, tốt, chấp nhận được, kém, bị cấm)
+--        - Trạng thái thăm (lên lịch, đang diễn ra, hoàn thành, hủy, vắng mặt, bị chấm dứt)
+--        - Vật dụng trao đổi
+-- ============================================
 -- Visit Logs Table
 CREATE TABLE visit_logs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -86,6 +114,17 @@ CREATE TABLE visit_logs (
     CONSTRAINT chk_visit_times CHECK (check_out_time IS NULL OR check_out_time >= check_in_time)
 );
 
+-- ============================================
+-- BẢNG: visitation_rules
+-- MỤC ĐÍCH: Lưu trữ các quy tắc thăm viếng của nhà tù
+-- MÔ TẢ: Quản lý quy tắc thăm bao gồm:
+--        - Tên quy tắc, mô tả chi tiết, loại quy tắc (chung, an ninh, y tế, đặc biệt, tạm thời)
+--        - Áp dụng cho (tất cả, phân loại tù nhân, loại khách thăm, cụ thể)
+--        - Phân loại tù nhân, loại khách thăm
+--        - Số khách tối đa, thời lượng tối đa, ngày/giờ cho phép
+--        - Danh sách vật cấm, yêu cầu đặc biệt
+--        - Ngày có hiệu lực, ngày hết hạn
+-- ============================================
 -- Visitation Rules Table
 CREATE TABLE visitation_rules (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -115,6 +154,15 @@ CREATE TABLE visitation_rules (
     CONSTRAINT chk_rule_dates CHECK (expiry_date IS NULL OR expiry_date >= effective_date)
 );
 
+-- ============================================
+-- BẢNG: visitor_restrictions
+-- MỤC ĐÍCH: Lưu trữ các hạn chế thăm viếng áp dụng cho khách thăm cụ thể
+-- MÔ TẢ: Quản lý hạn chế bao gồm:
+--        - Loại hạn chế (bị cấm, chỉ giám sát, thời gian hạn chế, tù nhân cụ thể, tạm hoãn)
+--        - Lý do hạn chế, ngày bắt đầu - kết thúc
+--        - Vĩnh viễn hay tạm thời, người áp dụng, ngày xem xét lại
+--        - Trạng thái (hoạt động, hết hạn, bị hủy, đang xem xét), ghi chú
+-- ============================================
 -- Visitor Restrictions Table
 CREATE TABLE visitor_restrictions (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -140,6 +188,9 @@ CREATE TABLE visitor_restrictions (
     CONSTRAINT chk_restriction_dates CHECK (end_date IS NULL OR end_date >= start_date)
 );
 
+-- ============================================
+-- CHỈ MỤC (Indexes) - Cải thiện hiệu suất truy vấn
+-- ============================================
 -- Indexes
 CREATE INDEX idx_visit_requests_visitor ON visit_requests(visitor_id);
 CREATE INDEX idx_visit_requests_prisoner ON visit_requests(prisoner_id);

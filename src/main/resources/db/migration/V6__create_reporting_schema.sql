@@ -1,7 +1,18 @@
--- Reporting Module Schema
--- Version: V6
--- Description: Creates tables for reports and report templates
+-- ============================================
+-- V6: Reporting Module Schema
+-- Tạo schema quản lý báo cáo và mẫu báo cáo
+-- ============================================
 
+-- ============================================
+-- BẢNG: reports
+-- MỤC ĐÍCH: Lưu trữ thông tin báo cáo đã tạo
+-- MÔ TẢ: Quản lý báo cáo bao gồm:
+--        - Loại báo cáo (sức chứa, thống kê tù nhân, y tế, nhật ký khách thăm, tóm tắt nhập viện, xác minh sinh trắc học, sự cố, tùy chỉnh)
+--        - Người tạo, thời gian tạo, khoảng thời gian báo cáo
+--        - Tham số báo cáo (JSON), đường dẫn file, định dạng (PDF, Excel, CSV, JSON, HTML)
+--        - Kích thước file, trạng thái (tạo, thất bại, hết hạn, lưu trữ)
+--        - Ngày hết hạn
+-- ============================================
 -- Reports Table
 CREATE TABLE reports (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -28,6 +39,17 @@ CREATE TABLE reports (
     CONSTRAINT chk_report_dates CHECK (end_date IS NULL OR end_date >= start_date)
 );
 
+-- ============================================
+-- BẢNG: report_templates
+-- MỤC ĐÍCH: Lưu trữ các mẫu báo cáo có thể tái sử dụng
+-- MÔ TẢ: Quản lý mẫu báo cáo bao gồm:
+--        - Tên mẫu (duy nhất), loại mẫu, mô tả
+--        - Truy vấn SQL, schema tham số (JSON)
+--        - Định dạng đầu ra (PDF, Excel, CSV, JSON, HTML)
+--        - Trạng thái hoạt động, lên lịch định kỳ
+--        - Biểu thức Cron cho lịch trình tự động
+--        - Người tạo, thời gian cập nhật
+-- ============================================
 -- Report Templates Table
 CREATE TABLE report_templates (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -50,6 +72,16 @@ CREATE TABLE report_templates (
     CONSTRAINT chk_template_format CHECK (output_format IN ('PDF', 'EXCEL', 'CSV', 'JSON', 'HTML'))
 );
 
+-- ============================================
+-- BẢNG: report_schedules
+-- MỤC ĐÍCH: Quản lý lịch tạo báo cáo tự động
+-- MÔ TẢ: Quản lý lịch trình báo cáo bao gồm:
+--        - Tên lịch trình, biểu thức Cron (định kỳ)
+--        - Trạng thái hoạt động
+--        - Thời gian chạy lần cuối, lần tiếp theo
+--        - Tham số báo cáo, danh sách người nhận email
+--        - Người tạo, thời gian cập nhật
+-- ============================================
 -- Report Schedules Table
 CREATE TABLE report_schedules (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -69,6 +101,9 @@ CREATE TABLE report_schedules (
     CONSTRAINT fk_report_schedules_template FOREIGN KEY (template_id) REFERENCES report_templates(id) ON DELETE CASCADE
 );
 
+-- ============================================
+-- CHỈ MỤC (Indexes) - Cải thiện hiệu suất truy vấn
+-- ============================================
 -- Indexes
 CREATE INDEX idx_reports_type ON reports(report_type);
 CREATE INDEX idx_reports_generated_date ON reports(generated_at DESC);

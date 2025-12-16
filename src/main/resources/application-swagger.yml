@@ -1,0 +1,35 @@
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    display-request-duration: true
+    operations-sorter: method
+    tags-sorter: alpha
+    doc-expansion: none
+    default-models-expand-depth: 3
+    default-model-expand-depth: 3
+    # Custom CSS for logo
+    custom-css: |
+      .swagger-ui .topbar { 
+        background-color: #1a1a2e;
+        border-bottom: 3px solid #ff6b35;
+      }
+      .swagger-ui .topbar-wrapper::before {
+        content: '🔒';
+        font-size: 48px;
+        margin-right: 15px;
+        vertical-align: middle;
+      }
+      .swagger-ui .info .title {
+        color: #ff6b35;
+      }
+      .swagger-ui .info .description {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        padding: 20px;
+        border-radius: 8px;
+        color: #e8e8e8;
+      }
+  api-docs:
+    path: /api-docs
+    enabled: true
+  show-actuator: false

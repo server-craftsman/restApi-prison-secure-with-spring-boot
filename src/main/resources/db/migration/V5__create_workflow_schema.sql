@@ -1,7 +1,17 @@
--- Workflow Control Module Schema
--- Version: V5
--- Description: Creates tables for workflows, workflow instances, steps, and approvals
+-- ============================================
+-- V5: Workflow Control Module Schema
+-- Tạo schema quản lý quy trình công việc trong nhà tù
+-- ============================================
 
+-- ============================================
+-- BẢNG: workflows
+-- MỤC ĐÍCH: Lưu trữ định nghĩa các quy trình công việc (workflow)
+-- MÔ TẢ: Quản lý các loại quy trình bao gồm:
+--        - Loại quy trình (nhập viện, phóng thích, chuyển lao động, phân loại, kỷ luật, cấp cứu y tế, tại ngoại, khác)
+--        - Tên quy trình, mô tả chi tiết
+--        - Trạng thái hoạt động (có/không)
+--        - Mỗi loại workflow là duy nhất
+-- ============================================
 -- Workflows Table (workflow definitions)
 CREATE TABLE workflows (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -18,6 +28,17 @@ CREATE TABLE workflows (
     CONSTRAINT chk_workflow_type CHECK (workflow_type IN ('ADMISSION', 'RELEASE', 'TRANSFER', 'CLASSIFICATION', 'DISCIPLINARY', 'MEDICAL_EMERGENCY', 'PAROLE', 'OTHER'))
 );
 
+-- ============================================
+-- BẢNG: workflow_instances
+-- MỤC ĐÍCH: Lưu trữ các phiên bản cụ thể của quy trình công việc đang thực hiện
+-- MÔ TẢ: Quản lý thực thi quy trình bao gồm:
+--        - Quy trình áp dụng (tham chiếu đến workflows)
+--        - Tù nhân/Đơn nhập viện liên quan
+--        - Trạng thái (bắt đầu, đang thực hiện, chờ phê duyệt, phê duyệt, từ chối, hoàn thành, hủy, tạm dừng)
+--        - Bước hiện tại, tổng số bước
+--        - Ưu tiên (thấp, bình thường, cao, khẩn cấp)
+--        - Thời gian bắt đầu - kết thúc, người phân công, metadata JSON
+-- ============================================
 -- Workflow Instances Table
 CREATE TABLE workflow_instances (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -50,6 +71,17 @@ CREATE TABLE workflow_instances (
     CONSTRAINT chk_reference_type CHECK (reference_type IN ('PRISONER', 'BOOKING', 'MEDICAL', 'VISITOR', 'SCHEDULE', 'OTHER'))
 );
 
+-- ============================================
+-- BẢNG: workflow_steps
+-- MỤC ĐÍCH: Lưu trữ các bước chi tiết trong một phiên bản quy trình công việc
+-- MÔ TẢ: Quản lý từng bước của quy trình bao gồm:
+--        - Số bước, tên bước, mô tả chi tiết
+--        - Người phân công, vai trò phân công
+--        - Trạng thái bước (chưa thực hiện, đang thực hiện, hoàn thành, bỏ qua, thất bại, chờ phê duyệt)
+--        - Thời gian bắt đầu - kết thúc, người hoàn thành
+--        - Hạn chót thực hiện
+--        - Cần phê duyệt, bước blocking (bắt buộc phải hoàn thành)
+-- ============================================
 -- Workflow Steps Table
 CREATE TABLE workflow_steps (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -76,6 +108,16 @@ CREATE TABLE workflow_steps (
     CONSTRAINT uq_workflow_step UNIQUE (workflow_instance_id, step_number)
 );
 
+-- ============================================
+-- BẢNG: approvals
+-- MỤC ĐÍCH: Lưu trữ quá trình phê duyệt từng bước trong quy trình công việc
+-- MÔ TẢ: Quản lý phê duyệt bao gồm:
+--        - Người phê duyệt, vai trò phê duyệt
+--        - Trạng thái phê duyệt (chờ, phê duyệt, từ chối, chuyển giao, hết hạn)
+--        - Thời gian phê duyệt/từ chối
+--        - Nhận xét/lý do phê duyệt hoặc từ chối
+--        - Cấp độ phê duyệt, phê duyệt cuối cùng hay không
+-- ============================================
 -- Approvals Table
 CREATE TABLE approvals (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

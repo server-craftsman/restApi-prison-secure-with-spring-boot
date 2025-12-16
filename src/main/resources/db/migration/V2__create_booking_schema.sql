@@ -1,6 +1,14 @@
+-- ============================================
 -- V2: Create Booking Schema
--- Migration for booking and intake management
+-- Tạo schema quản lý nhập trại và xử lý tù nhân
+-- ============================================
 
+-- ============================================
+-- BẢNG: bookings
+-- MỤC ĐÍCH: Quản lý quá trình nhập trại và xử lý tù nhân
+-- MÔ TẢ: Theo dõi toàn bộ quá trình từ khi tù nhân được đưa vào trại
+--        đến khi thả, bao gồm thông tin bắt giữ, bảo lãnh, thả
+-- ============================================
 CREATE TABLE IF NOT EXISTS bookings (
     id VARCHAR(36) PRIMARY KEY,
     prisoner_id VARCHAR(36) NOT NULL,
@@ -46,7 +54,12 @@ CREATE INDEX idx_booking_number ON bookings(booking_number);
 CREATE INDEX idx_booking_status ON bookings(booking_status);
 CREATE INDEX idx_booking_date ON bookings(booking_date);
 
--- Charges table
+-- ============================================
+-- BẢNG: charges
+-- MỤC ĐÍCH: ưu trữ các tội danh được buộc tội cho tù nhân
+-- MÔ TẢ: Quản lý chi tiết các tội danh, mức độ nghiêm trọng,
+--        điều luật áp dụng, trạng thái xử lí (kết án, trả án, bác bỏ)
+-- ============================================
 CREATE TABLE IF NOT EXISTS charges (
     id VARCHAR(36) PRIMARY KEY,
     booking_id VARCHAR(36) NOT NULL,
@@ -79,7 +92,12 @@ CREATE INDEX idx_charge_booking ON charges(booking_id);
 CREATE INDEX idx_charge_code ON charges(charge_code);
 CREATE INDEX idx_charge_severity ON charges(severity);
 
--- Court Appearances table
+-- ============================================
+-- B?NG: court_appearances
+-- MỤC ĐÍCH: Quản lý lịch trình và kết quả các phiên tòa
+-- MÔ TẢ: Đảm bảo tù nhân có mặt đúng giờ tại tòa, theo dõi
+--        tiến trình pháp lý (truy tố, xét xử, tuyên án, kháng cáo)
+-- ============================================
 CREATE TABLE IF NOT EXISTS court_appearances (
     id VARCHAR(36) PRIMARY KEY,
     booking_id VARCHAR(36) NOT NULL,
@@ -117,6 +135,9 @@ CREATE INDEX idx_court_booking ON court_appearances(booking_id);
 CREATE INDEX idx_court_scheduled ON court_appearances(scheduled_date);
 CREATE INDEX idx_court_status ON court_appearances(appearance_status);
 
-COMMENT ON TABLE bookings IS 'Booking records for prisoner intake and processing';
-COMMENT ON TABLE charges IS 'Criminal charges associated with bookings';
-COMMENT ON TABLE court_appearances IS 'Scheduled and completed court appearances';
+-- ============================================
+-- GHI CHÚ (Comments) - Mô tả bảng
+-- ============================================
+COMMENT ON TABLE bookings IS 'Nhật ký nhập viện tù nhân (thông tin bắt giữ, tại ngoại, xử lý)';
+COMMENT ON TABLE charges IS 'Tội danh hình sự liên quan đến mỗi lần nhập viện';
+COMMENT ON TABLE court_appearances IS 'Lịch trình và kết quả các phiên tòa xét xử';
