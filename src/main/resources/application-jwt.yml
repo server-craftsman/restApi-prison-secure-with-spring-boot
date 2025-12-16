@@ -1,4 +1,12 @@
-jwt:
-  secret: ${JWT_SECRET:prison-secure-secret-key-change-this-in-production-2025-very-long-secret}
-  expiration: 86400000 # 24 hours in milliseconds
-  prisoner-expiration: 28800000 # 8 hours in milliseconds for prisoners
+# ============================================
+# JWT Configuration
+# ============================================
+
+prison-secure:
+  security:
+    jwt:
+      secret: ${JWT_SECRET:dev-secret-key-change-in-production}
+      expiration: 86400000
+      prisoner-expiration: 28800000
+      issuer: prison-secure-system
+      audience: prison-secure-users

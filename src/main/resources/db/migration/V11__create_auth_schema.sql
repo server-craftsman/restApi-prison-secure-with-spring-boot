@@ -106,7 +106,6 @@ CREATE INDEX idx_zones_guard ON prison_zones(guard_id);
 --        - tablet_assigned_date: Ngày cấp tablet
 -- ============================================
 -- UPDATE PRISONERS TABLE
-CREATE INDEX idx_zones_guard ON prison_zones(guard_id);
 ALTER TABLE prisoners ADD COLUMN IF NOT EXISTS prison_id UUID REFERENCES prisons(id);
 ALTER TABLE prisoners ADD COLUMN IF NOT EXISTS zone_id UUID REFERENCES prison_zones(id);
 ALTER TABLE prisoners ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES users(id);

@@ -1,13 +1,19 @@
-# Local Development Profile (without Docker)
-# Use this when running app locally and PostgreSQL separately
+# ============================================
+# Local Development Profile
+# ============================================
 
 spring:
+  # Database - Local PostgreSQL
   datasource:
-    url: jdbc:postgresql://localhost:5432/prison_secure # localhost instead of 'postgres'
-    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/prison_secure
     username: postgres
     password: postgres
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 2
 
+  # JPA/Hibernate Configuration
   jpa:
     hibernate:
       ddl-auto: validate
@@ -16,14 +22,44 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+        generate_statistics: true
 
+  # Flyway Configuration
   flyway:
     enabled: true
     baseline-on-migrate: true
     locations: classpath:db/migration
 
+# Server Configuration
+server:
+  port: 8080
+  error:
+    include-stacktrace: always
+
 # Logging
 logging:
   level:
+    root: INFO
     vn.gov.prison.secure: DEBUG
     org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+# Actuator - Show all endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+# JWT Configuration
+prison-secure:
+  security:
+    jwt:
+      secret: dev-secret-key-for-local-testing-only
+      expiration: 86400000
+      prisoner-expiration: 28800000

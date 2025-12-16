@@ -1,13 +1,18 @@
-# Spring Application Configuration
+# ============================================
+# Spring Application Configuration (BASE)
+# ============================================
+
 spring:
   application:
     name: prison-secure
 
-  # Database Configuration
+  # ============================================
+  # Database Configuration (Default values)
+  # ============================================
   datasource:
-    url: jdbc:postgresql://localhost:5432/prison_secure
-    username: postgres
-    password: postgres
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/prison_secure}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -16,10 +21,12 @@ spring:
       idle-timeout: 600000
       max-lifetime: 1800000
 
-  # JPA Configuration
+  # ============================================
+  # JPA/Hibernate Configuration
+  # ============================================
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: validate # validate, update, create, create-drop
     show-sql: false
     properties:
       hibernate:
@@ -31,22 +38,20 @@ spring:
         order_inserts: true
         order_updates: true
 
-  # Flyway Configuration
+  # ============================================
+  # Flyway Configuration (Database Migration)
+  # ============================================
   flyway:
     enabled: true
     baseline-on-migrate: true
     locations: classpath:db/migration
     validate-on-migrate: true
 
-  # Security Configuration
-  security:
-    user:
-      name: admin
-      password: admin123
-
+# ============================================
 # Server Configuration
+# ============================================
 server:
-  port: 8080
+  port: ${SERVER_PORT:8080}
   servlet:
     context-path: /
   error:
@@ -55,7 +60,9 @@ server:
     include-stacktrace: never
     include-exception: false
 
-# Actuator Configuration
+# ============================================
+# Actuator & Management
+# ============================================
 management:
   endpoints:
     web:
@@ -65,23 +72,29 @@ management:
     health:
       show-details: when-authorized
 
+# ============================================
 # Logging Configuration
+# ============================================
 logging:
   level:
     root: INFO
     vn.gov.prison.secure: DEBUG
     org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
 
-# Application Specific Configuration
+# ============================================
+# Application Features Configuration
+# ============================================
 prison-secure:
   biometric:
     verification-threshold: 0.95
     search-threshold: 0.80
+
   security:
     jwt:
-      secret: your-256-bit-secret-key-change-in-production
-      expiration: 86400000 # 24 hours in milliseconds
+      # Override in environment variables for production!
+      secret: ${JWT_SECRET:change-this-secret-in-production}
+      expiration: 86400000 # 24 hours
+      prisoner-expiration: 28800000 # 8 hours
